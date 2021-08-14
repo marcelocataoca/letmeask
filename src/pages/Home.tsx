@@ -30,6 +30,12 @@ export function Home() {
       alert("Room does not exists.");
       return;
     }
+    console.log("valores");
+    console.log(roomRef.val());
+    if (roomRef.val().endedAT) {
+      alert("Room already closed.");
+      return;
+    }
     history.push(`/rooms/${roomCode}`);
   }
 
