@@ -30,7 +30,9 @@ export function Home() {
       alert("Room does not exists.");
       return;
     }
-    if (roomRef.val().endedAt) {
+    console.log("valores");
+    console.log(roomRef.val());
+    if (roomRef.val().endedAT) {
       alert("Room already closed.");
       return;
     }
