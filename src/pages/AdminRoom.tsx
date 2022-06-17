@@ -9,10 +9,18 @@ import { RoomCode } from "../components/RoomCode";
 import { useRoom } from "../hooks/useRoom";
 import "../styles/room.scss";
 import { database } from "../services/firebase";
+import { Box, Tab, Tabs, Typography } from "@mui/material";
+import { useState } from "react";
 
 type RoomParams = {
   id: string;
 };
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
 
 export function AdminRoom() {
   // const { user } = useAuth();
@@ -20,6 +28,7 @@ export function AdminRoom() {
   const history = useHistory();
   const params = useParams<RoomParams>();
   const roomId = params.id;
+  const [tabValue, setTabValue] = useState(0);
 
   const { questions, title } = useRoom(roomId);
 
@@ -48,6 +57,37 @@ export function AdminRoom() {
     });
   }
 
+  function TabPanel(props: TabPanelProps) {
+    const { children, value, index, ...other } = props;
+
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box sx={{ p: 3 }} key={index}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  }
+
+  function a11yProps(index: number) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setTabValue(newValue);
+  };
+
   return (
     <div id="page-room">
       <header>
@@ -69,43 +109,62 @@ export function AdminRoom() {
         <div className="question-list">
           {questions.map((question) => {
             return (
-              <Question
-                key={question.id}
-                content={question.content}
-                author={question.author}
-                isAnswered={question.isAnswered}
-                isHighlighted={question.isHighlighted}
-              >
-                {!question.isAnswered && (
-                  <>
+              <Box sx={{ width: "100%" }}>
+                {/* <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                  <Tabs
+                    value={tabValue}
+                    onChange={handleChange}
+                    aria-label="basic tabs example"
+                  >
+                    <Tab label="Frequentes"  {...a11yProps(0)}/>
+                    <Tab label="Respondidas"  {...a11yProps(1)}/>
+                  </Tabs>
+                </Box> */}
+                <TabPanel value={tabValue} index={0}>
+                  <Question
+                    key={question.id}
+                    content={question.content}
+                    author={question.author}
+                    isAnswered={question.isAnswered}
+                    isHighlighted={question.isHighlighted}
+                  >
+                    {!question.isAnswered && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleCheckQuestionAsAnswered(question.id)
+                          }
+                        >
+                          <img
+                            src={checkImg}
+                            alt="Marcar como respondida"
+                            title="Marcar como respondida"
+                          />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleHighlightQuestion(question.id)}
+                        >
+                          <img src={answerImg} alt="Destacar pergunta" title="Destacar pergunta" />
+                        </button>
+                      </>
+                    )}
                     <button
                       type="button"
-                      onClick={() => handleCheckQuestionAsAnswered(question.id)}
+                      onClick={() => handleDeleteQuestion(question.id)}
                     >
-                      <img
-                        src={checkImg}
-                        alt="Marcar pergunta como respondida"
-                      />
+                      <img src={deleteImg} alt="Remover pergunta" title="Remover pergunta"/>
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => handleHighlightQuestion(question.id)}
-                    >
-                      <img src={answerImg} alt="Dar destaque à pergunta" />
-                    </button>
-                  </>
-                )}
-                <button
-                  type="button"
-                  onClick={() => handleDeleteQuestion(question.id)}
-                >
-                  <img src={deleteImg} alt="Remover pergunta" />
-                </button>
-              </Question>
+                  </Question>
+                </TabPanel>
+                {/* <TabPanel value={tabValue} index={1}>
+                  <h3>Questions Respondidas</h3>
+                </TabPanel> */}
+              </Box>
             );
           })}
         </div>
-        {/* {JSON.stringify(questions)} */}
       </main>
     </div>
   );
