@@ -80,7 +80,7 @@ export function AdminRoom() {
   function a11yProps(index: number) {
     return {
       id: `simple-tab-${index}`,
-      'aria-controls': `simple-tabpanel-${index}`,
+      "aria-controls": `simple-tabpanel-${index}`,
     };
   }
 
@@ -107,63 +107,93 @@ export function AdminRoom() {
           {questions.length > 0 && <span>{questions.length} pergunta(s)</span>}
         </div>
         <div className="question-list">
-          {questions.map((question) => {
-            return (
-              <Box sx={{ width: "100%" }}>
-                {/* <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                  <Tabs
-                    value={tabValue}
-                    onChange={handleChange}
-                    aria-label="basic tabs example"
-                  >
-                    <Tab label="Frequentes"  {...a11yProps(0)}/>
-                    <Tab label="Respondidas"  {...a11yProps(1)}/>
-                  </Tabs>
-                </Box> */}
-                <TabPanel value={tabValue} index={0}>
-                  <Question
-                    key={question.id}
-                    content={question.content}
-                    author={question.author}
-                    isAnswered={question.isAnswered}
-                    isHighlighted={question.isHighlighted}
-                  >
+          <Box sx={{ width: "100%" }}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Tabs
+                value={tabValue}
+                onChange={handleChange}
+                aria-label="basic tabs example"
+              >
+                <Tab label="Frequentes" {...a11yProps(0)} />
+                <Tab label="Respondidas" {...a11yProps(1)} />
+              </Tabs>
+            </Box>
+            {questions.map((question, index) => {
+              return (
+                <>                  
+                  <TabPanel value={tabValue} index={0} key={index}>
                     {!question.isAnswered && (
-                      <>
+                      <Question
+                        key={question.id}
+                        content={question.content}
+                        author={question.author}
+                        isAnswered={question.isAnswered}
+                        isHighlighted={question.isHighlighted}
+                      >
+                        <>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleCheckQuestionAsAnswered(question.id)
+                            }
+                          >
+                            <img
+                              src={checkImg}
+                              alt="Marcar como respondida"
+                              title="Marcar como respondida"
+                            />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleHighlightQuestion(question.id)}
+                          >
+                            <img
+                              src={answerImg}
+                              alt="Destacar pergunta"
+                              title="Destacar pergunta"
+                            />
+                          </button>
+                        </>
+
                         <button
                           type="button"
-                          onClick={() =>
-                            handleCheckQuestionAsAnswered(question.id)
-                          }
+                          onClick={() => handleDeleteQuestion(question.id)}
                         >
                           <img
-                            src={checkImg}
-                            alt="Marcar como respondida"
-                            title="Marcar como respondida"
+                            src={deleteImg}
+                            alt="Remover pergunta"
+                            title="Remover pergunta"
                           />
                         </button>
+                      </Question>
+                    )}
+                  </TabPanel>
+                  <TabPanel value={tabValue} index={1} key={index}>
+                    {question.isAnswered && (
+                      <Question
+                        key={question.id}
+                        content={question.content}
+                        author={question.author}
+                        isAnswered={question.isAnswered}
+                        isHighlighted={question.isHighlighted}
+                      >
                         <button
                           type="button"
-                          onClick={() => handleHighlightQuestion(question.id)}
+                          onClick={() => handleDeleteQuestion(question.id)}
                         >
-                          <img src={answerImg} alt="Destacar pergunta" title="Destacar pergunta" />
+                          <img
+                            src={deleteImg}
+                            alt="Remover pergunta"
+                            title="Remover pergunta"
+                          />
                         </button>
-                      </>
+                      </Question>
                     )}
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteQuestion(question.id)}
-                    >
-                      <img src={deleteImg} alt="Remover pergunta" title="Remover pergunta"/>
-                    </button>
-                  </Question>
-                </TabPanel>
-                {/* <TabPanel value={tabValue} index={1}>
-                  <h3>Questions Respondidas</h3>
-                </TabPanel> */}
-              </Box>
-            );
-          })}
+                  </TabPanel>
+                </>
+              );
+            })}
+          </Box>
         </div>
       </main>
     </div>
