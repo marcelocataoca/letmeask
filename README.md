@@ -11,6 +11,7 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - [React](https://reactjs.org)
 - [Firebase](https://firebase.google.com/)
 - [TypeScript](https://www.typescriptlang.org/)
+- [Material UI](https://mui.com/pt/material-ui/getting-started/installation/)
 
 ## 🚀 Como executar
 
@@ -39,3 +40,4 @@ Lembrando que será necessário criar uma conta no [Firebase](https://firebase.g
 Letmeask é perfeito para criadores de conteúdos poderem criar salas de Q&A com o seu público, de uma forma muito organizada e democrática. 
 
 Este é um projeto desenvolvido durante a **[Next Level Week Together](https://nextlevelweek.com/)**
+e com algumas features adicionais implementadas pelo autor do repositório.
