@@ -31,7 +31,11 @@
     .room-title {
       margin: 32px 0 24px;
       display: flex;
-      align-items: center;
+      justify-content: space-between;
+      .center{
+        display: flex;
+        align-items: center;
+      }
 
       h1 {
         font-family: 'Poppins', sans-serif;
@@ -105,5 +109,17 @@
   }
   .question-list{
     margin-top: 32px; 
+
+    .container-empty{
+      display: flex;
+      padding: 10px;
+      justify-content: center;
+
+      .msg-empty{
+        margin-top: 20px;
+        font-weight: 500;
+        font-size: 18px;
+      }
+    }
   }
 }

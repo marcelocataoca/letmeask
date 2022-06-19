@@ -9,8 +9,9 @@ import { RoomCode } from "../components/RoomCode";
 import { useRoom } from "../hooks/useRoom";
 import "../styles/room.scss";
 import { database } from "../services/firebase";
-import { Box, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Container, Tab, Tabs, TextField } from "@mui/material";
 import { useState } from "react";
+import SearchIcon from '@mui/icons-material/Search';
 
 type RoomParams = {
   id: string;
@@ -29,6 +30,7 @@ export function AdminRoom() {
   const params = useParams<RoomParams>();
   const roomId = params.id;
   const [tabValue, setTabValue] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { questions, title } = useRoom(roomId);
 
@@ -70,7 +72,7 @@ export function AdminRoom() {
       >
         {value === index && (
           <Box sx={{ p: 3 }} key={index}>
-            <Typography>{children}</Typography>
+            <span>{children}</span>
           </Box>
         )}
       </div>
@@ -88,6 +90,16 @@ export function AdminRoom() {
     setTabValue(newValue);
   };
 
+  const filterData = (query: any, questions: any) => {
+    if (!query || query === undefined) {
+      return questions;
+    } else {         
+      return questions.filter((d: any) => d.content.toLowerCase().includes(query));
+    }
+  };
+  
+  const dataFiltered = filterData(searchQuery, questions);
+
   return (
     <div id="page-room">
       <header>
@@ -103,8 +115,23 @@ export function AdminRoom() {
       </header>
       <main className="content">
         <div className="room-title">
-          <h1>Sala {title}</h1>
-          {questions.length > 0 && <span>{questions.length} pergunta(s)</span>}
+          <div className="center">
+            <h1>Sala {title}</h1>
+            {questions.length > 0 && <span className="center">{questions.length} pergunta(s)</span>}
+          </div>
+          <TextField
+            id="search-bar"           
+            onChange={(e) => {
+              setSearchQuery((e.target as HTMLInputElement).value);
+            }}                            
+            label="Buscar pergunta"
+            variant="outlined"
+            placeholder="Search..."
+            size="small" 
+            InputProps={{
+              endAdornment: <SearchIcon/>
+            }}
+          />
         </div>
         <div className="question-list">
           <Box sx={{ width: "100%" }}>
@@ -118,10 +145,10 @@ export function AdminRoom() {
                 <Tab label="Respondidas" {...a11yProps(1)} />
               </Tabs>
             </Box>
-            {questions.map((question, index) => {
+            {dataFiltered.length > 0 &&  dataFiltered.map((question: any, index: any) => {
               return (
-                <>                  
-                  <TabPanel value={tabValue} index={0} key={index}>
+                <div key={index}>                  
+                  <TabPanel value={tabValue} index={0}>
                     {!question.isAnswered && (
                       <Question
                         key={question.id}
@@ -168,7 +195,7 @@ export function AdminRoom() {
                       </Question>
                     )}
                   </TabPanel>
-                  <TabPanel value={tabValue} index={1} key={index}>
+                  <TabPanel value={tabValue} index={1}>
                     {question.isAnswered && (
                       <Question
                         key={question.id}
@@ -190,9 +217,16 @@ export function AdminRoom() {
                       </Question>
                     )}
                   </TabPanel>
-                </>
+                </div>
               );
             })}
+
+            {/* Nenhum resultado encontrado */}
+            {dataFiltered.length === 0 &&  
+              <Container className="container-empty">
+                <p className="msg-empty">Nenhum resultado encontrado! </p>
+              </Container>
+            } 
           </Box>
         </div>
       </main>
