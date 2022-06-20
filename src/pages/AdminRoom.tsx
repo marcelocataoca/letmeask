@@ -31,7 +31,6 @@ export function AdminRoom() {
   const roomId = params.id;
   const [tabValue, setTabValue] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
-
   const { questions, title } = useRoom(roomId);
 
   async function handleEndRoom() {
@@ -224,7 +223,7 @@ export function AdminRoom() {
             {/* Nenhum resultado encontrado */}
             {dataFiltered.length === 0 &&  
               <Container className="container-empty">
-                <p className="msg-empty">Nenhum resultado encontrado! </p>
+                <p className="msg-empty">Nenhum pergunta encontrada! </p>
               </Container>
             } 
           </Box>
