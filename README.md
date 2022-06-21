@@ -2,10 +2,8 @@
   <img alt="Letmeask" src=".github/logo.svg" width="160px">
 </p>
 <br>
-![letmeask1](https://user-images.githubusercontent.com/19317136/174810645-b58bdf57-3cd2-4815-8dbc-f23b77e3dbc1.gif)
+![letmeask2](https://user-images.githubusercontent.com/19317136/174815871-cbd3d52b-79f1-4755-97d3-b9aed471335f.gif)
 <br>
-
-![testeletme](https://user-images.githubusercontent.com/19317136/174813898-19227777-62a5-4948-851c-5d42ccfd1610.gif)
 
 
 ## 🧪 Tecnologias
