@@ -1,8 +1,9 @@
 <p align="center">
   <img alt="Letmeask" src=".github/logo.svg" width="160px">
 </p>
-<br>
-## 👀 Confira projeto em execução
+
+## 👀 Confira o projeto em execução
+
 ![letmeask2](https://user-images.githubusercontent.com/19317136/174815871-cbd3d52b-79f1-4755-97d3-b9aed471335f.gif)
 <br>
 
