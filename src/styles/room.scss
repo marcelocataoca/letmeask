@@ -35,6 +35,7 @@
       .center{
         display: flex;
         align-items: center;
+        justify-content: center;
       }
 
       h1 {
@@ -120,6 +121,11 @@
         font-weight: 500;
         font-size: 18px;
       }
+    }
+    .container-shimmer{
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
     }
   }
 }

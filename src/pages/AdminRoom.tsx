@@ -10,7 +10,8 @@ import { useRoom } from "../hooks/useRoom";
 import "../styles/room.scss";
 import { database } from "../services/firebase";
 import { Box, Container, Tab, Tabs, TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {Shimmer} from "react-shimmer";
 import SearchIcon from '@mui/icons-material/Search';
 
 type RoomParams = {
@@ -32,6 +33,7 @@ export function AdminRoom() {
   const [tabValue, setTabValue] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const { questions, title } = useRoom(roomId);
+  const [load, setLoad] = useState(true);
 
   async function handleEndRoom() {
     await database.ref(`rooms/${roomId}`).update({
@@ -57,6 +59,12 @@ export function AdminRoom() {
       isHighlighted: true,
     });
   }
+
+  useEffect(() => {
+    setTimeout(()=> {
+      setLoad(false);
+    },1100)
+  }, [])
 
   function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
@@ -144,7 +152,7 @@ export function AdminRoom() {
                 <Tab label="Respondidas" {...a11yProps(1)} />
               </Tabs>
             </Box>
-            {dataFiltered.length > 0 &&  dataFiltered.map((question: any, index: any) => {
+            {dataFiltered.length > 0 && !load &&  dataFiltered.map((question: any, index: any) => {
               return (
                 <div key={index}>                  
                   <TabPanel value={tabValue} index={0}>
@@ -221,11 +229,16 @@ export function AdminRoom() {
             })}
 
             {/* Nenhum resultado encontrado */}
-            {dataFiltered.length === 0 &&  
+            {dataFiltered.length === 0 &&  !load &&
               <Container className="container-empty">
                 <p className="msg-empty">Nenhum pergunta encontrada! </p>
               </Container>
-            } 
+            }
+            {load &&
+              <div className="container-shimmer">
+                <Shimmer width={750} height={50} />
+              </div>
+            }
           </Box>
         </div>
       </main>
