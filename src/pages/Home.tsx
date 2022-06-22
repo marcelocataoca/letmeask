@@ -8,6 +8,7 @@ import { Button } from "../components/Button";
 import { useAuth } from "../hooks/useAuth";
 import { FormEvent, useState } from "react";
 import { database } from "../services/firebase";
+import { Paper } from "@mui/material";
 
 export default function Home() {
   const history = useHistory();
@@ -31,7 +32,7 @@ export default function Home() {
       alert("Room does not exists.");
       return;
     }
-   
+  
     if (roomRef.val().endedAT) {
       alert("Room already closed.");
       return;
@@ -41,14 +42,16 @@ export default function Home() {
 
   return (
     <div id="page-auth">
-      <aside>
-        <img
-          src={illustrationImg}
-          alt="Ilustração simbolizando ask and quest"
-        />
-        <strong>Crie salas de Q&amp;A ao-vivo</strong>
-        <p>Tire as dúvidas da sua audiência em tempo-real</p>
-      </aside>
+      <Paper  sx={{ display: { md: 'flex', xs: 'none' } }}>
+        <aside>
+          <img
+            src={illustrationImg}
+            alt="Ilustração simbolizando ask and quest"
+          />
+          <strong>Crie salas de Q&amp;A ao-vivo</strong>
+          <p>Tire as dúvidas da sua audiência em tempo-real</p>
+        </aside>
+      </Paper>
       <main>
         <div className="main-content">
           <img src={logoImg} alt="Letmeask" />
