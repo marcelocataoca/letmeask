@@ -10,7 +10,8 @@ import { useRoom } from "../hooks/useRoom";
 import "../styles/room.scss";
 import { database } from "../services/firebase";
 import { Box, Container, Tab, Tabs, TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {Shimmer} from "react-shimmer";
 import SearchIcon from '@mui/icons-material/Search';
 
 type RoomParams = {
@@ -23,6 +24,33 @@ interface TabPanelProps {
   value: number;
 }
 
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }} key={index}>
+          <span>{children}</span>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
+
 export function AdminRoom() {
   // const { user } = useAuth();
   //generic props: tipando os param
@@ -32,6 +60,7 @@ export function AdminRoom() {
   const [tabValue, setTabValue] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const { questions, title } = useRoom(roomId);
+  const [load, setLoad] = useState(true);
 
   async function handleEndRoom() {
     await database.ref(`rooms/${roomId}`).update({
@@ -58,32 +87,11 @@ export function AdminRoom() {
     });
   }
 
-  function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box sx={{ p: 3 }} key={index}>
-            <span>{children}</span>
-          </Box>
-        )}
-      </div>
-    );
-  }
-
-  function a11yProps(index: number) {
-    return {
-      id: `simple-tab-${index}`,
-      "aria-controls": `simple-tabpanel-${index}`,
-    };
-  }
+  useEffect(() => {
+    setTimeout(()=> {
+      setLoad(false);
+    },1500)
+  }, [])
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -138,13 +146,13 @@ export function AdminRoom() {
               <Tabs
                 value={tabValue}
                 onChange={handleChange}
-                aria-label="basic tabs example"
+                aria-label="basic tabs"
               >
                 <Tab label="Frequentes" {...a11yProps(0)} />
                 <Tab label="Respondidas" {...a11yProps(1)} />
               </Tabs>
             </Box>
-            {dataFiltered.length > 0 &&  dataFiltered.map((question: any, index: any) => {
+            {dataFiltered.length > 0 && !load &&  dataFiltered.map((question: any, index: any) => {
               return (
                 <div key={index}>                  
                   <TabPanel value={tabValue} index={0}>
@@ -193,6 +201,13 @@ export function AdminRoom() {
                         </button>
                       </Question>
                     )}
+
+                    {/* Todas perguntas respondidas */}
+                    {dataFiltered.filter((value: any) => !value.isAnswered).length === 0 && index === 0 && !load &&                      
+                      <Container className="container-empty">
+                        <p className="msg-empty">Todas perguntas foram repondidas! </p>
+                      </Container>
+                    }
                   </TabPanel>
                   <TabPanel value={tabValue} index={1}>
                     {question.isAnswered && (
@@ -215,17 +230,29 @@ export function AdminRoom() {
                         </button>
                       </Question>
                     )}
+
+                    {/* Nenhuma pergunta respondida */}
+                    {dataFiltered.filter((value: any) => value.isAnswered).length === 0 && index === 0 && !load &&                      
+                      <Container className="container-empty">
+                        <p className="msg-empty">Nenhum pergunta respondida! </p>
+                      </Container>
+                    }
                   </TabPanel>
                 </div>
               );
             })}
 
             {/* Nenhum resultado encontrado */}
-            {dataFiltered.length === 0 &&  
+            {dataFiltered.length === 0 &&  !load &&
               <Container className="container-empty">
                 <p className="msg-empty">Nenhum pergunta encontrada! </p>
               </Container>
-            } 
+            }
+            {load &&
+              <div className="container-shimmer">
+                <Shimmer width={750} height={50} />
+              </div>
+            }
           </Box>
         </div>
       </main>
