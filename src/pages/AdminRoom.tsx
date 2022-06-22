@@ -24,6 +24,33 @@ interface TabPanelProps {
   value: number;
 }
 
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }} key={index}>
+          <span>{children}</span>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
+
 export function AdminRoom() {
   // const { user } = useAuth();
   //generic props: tipando os param
@@ -63,35 +90,8 @@ export function AdminRoom() {
   useEffect(() => {
     setTimeout(()=> {
       setLoad(false);
-    },1100)
+    },1500)
   }, [])
-
-  function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box sx={{ p: 3 }} key={index}>
-            <span>{children}</span>
-          </Box>
-        )}
-      </div>
-    );
-  }
-
-  function a11yProps(index: number) {
-    return {
-      id: `simple-tab-${index}`,
-      "aria-controls": `simple-tabpanel-${index}`,
-    };
-  }
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -146,7 +146,7 @@ export function AdminRoom() {
               <Tabs
                 value={tabValue}
                 onChange={handleChange}
-                aria-label="basic tabs example"
+                aria-label="basic tabs"
               >
                 <Tab label="Frequentes" {...a11yProps(0)} />
                 <Tab label="Respondidas" {...a11yProps(1)} />
@@ -201,6 +201,13 @@ export function AdminRoom() {
                         </button>
                       </Question>
                     )}
+
+                    {/* Todas perguntas respondidas */}
+                    {dataFiltered.filter((value: any) => !value.isAnswered).length === 0 && index === 0 && !load &&                      
+                      <Container className="container-empty">
+                        <p className="msg-empty">Todas perguntas foram repondidas! </p>
+                      </Container>
+                    }
                   </TabPanel>
                   <TabPanel value={tabValue} index={1}>
                     {question.isAnswered && (
@@ -223,6 +230,13 @@ export function AdminRoom() {
                         </button>
                       </Question>
                     )}
+
+                    {/* Nenhuma pergunta respondida */}
+                    {dataFiltered.filter((value: any) => value.isAnswered).length === 0 && index === 0 && !load &&                      
+                      <Container className="container-empty">
+                        <p className="msg-empty">Nenhum pergunta respondida! </p>
+                      </Container>
+                    }
                   </TabPanel>
                 </div>
               );
