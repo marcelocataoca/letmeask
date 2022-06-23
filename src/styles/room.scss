@@ -23,6 +23,15 @@
         }
       }
     }
+    @media (max-width: 600px) {
+      .content {
+        flex-direction: column;
+
+        img{
+          margin-bottom: 10px;
+        }
+      }
+    }
   }
   main {
     max-width: 800px;
@@ -52,6 +61,17 @@
         color: #FFF;
         font-weight: 500;
         font-size: 14px;
+      }
+    }
+  }
+  @media (max-width: 900px){
+    main{
+      padding: 0 24px;
+
+      .room-title {
+        h1{
+          font-size: 20px;
+        }
       }
     }
   }
