@@ -13,6 +13,7 @@ import { Box, Container, Tab, Tabs, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import {Shimmer} from "react-shimmer";
 import SearchIcon from '@mui/icons-material/Search';
+import { NoQuestion } from "../components/NoQuestion";
 
 type RoomParams = {
   id: string;
@@ -244,9 +245,7 @@ export function AdminRoom() {
 
             {/* Nenhum resultado encontrado */}
             {dataFiltered.length === 0 &&  !load &&
-              <Container className="container-empty">
-                <p className="msg-empty">Nenhum pergunta encontrada! </p>
-              </Container>
+             <NoQuestion/>
             }
             {load &&
               <div className="container-shimmer">
