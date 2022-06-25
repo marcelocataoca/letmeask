@@ -16,10 +16,17 @@
 
       > div {
         display: flex;
-        gap: 16px;
-
-        button {
-          height: 40px;
+        gap: 16px;        
+      }
+      .btn-logout{
+        height: 40px;
+        padding: 0 15px;   
+        border-radius: 20px;       
+        background: #FFF;
+        border: 1px solid #835afd;
+        svg{
+          margin-left:10px;  
+          color: #835afd;
         }
       }
     }
@@ -30,7 +37,21 @@
         img{
           margin-bottom: 10px;
         }
+        .btn-logout{
+          padding: 0 8px;
+          border-radius: 20px;       
+          .btn-text{
+            display: none;
+          }
+          svg{
+            margin-left: 0;
+          }        
+        }      
       }
+    }
+    .container-code-btn{
+      width: 100%;
+      justify-content: space-between;
     }
   }
   main {

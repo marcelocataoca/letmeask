@@ -13,6 +13,7 @@ import { Box, Container, Tab, Tabs, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import {Shimmer} from "react-shimmer";
 import SearchIcon from '@mui/icons-material/Search';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { NoQuestion } from "../components/NoQuestion";
 
 type RoomParams = {
@@ -113,10 +114,12 @@ export function AdminRoom() {
       <header>
         <div className="content">
           <img src={logoImg} alt="LetmeAsk" />
-          <div>
+          <div className="container-code-btn">
+            <div></div>
             <RoomCode code={params.id} />
-            <Button isOutlined onClick={handleEndRoom}>
-              Encerrar sala
+            <Button isOutlined onClick={handleEndRoom} className="btn-logout">
+              <span  className="btn-text">Encerrar sala</span>
+              <LogoutIcon/>
             </Button>
           </div>
         </div>
@@ -189,7 +192,6 @@ export function AdminRoom() {
                             />
                           </button>
                         </>
-
                         <button
                           type="button"
                           onClick={() => handleDeleteQuestion(question.id)}
