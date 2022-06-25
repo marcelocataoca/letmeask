@@ -192,7 +192,6 @@ export function AdminRoom() {
                             />
                           </button>
                         </>
-
                         <button
                           type="button"
                           onClick={() => handleDeleteQuestion(question.id)}
