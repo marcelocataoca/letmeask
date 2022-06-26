@@ -1,4 +1,4 @@
-import { useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import logoImg from "../assets/images/logo.svg";
 import deleteImg from "../assets/images/delete.svg";
 import checkImg from "../assets/images/check.svg";
@@ -11,9 +11,10 @@ import "../styles/room.scss";
 import { database } from "../services/firebase";
 import { Box, Container, Tab, Tabs, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import {Shimmer} from "react-shimmer";
-import SearchIcon from '@mui/icons-material/Search';
-import LogoutIcon from '@mui/icons-material/Logout';
+import { Shimmer } from "react-shimmer";
+import SearchIcon from "@mui/icons-material/Search";
+import LogoutIcon from "@mui/icons-material/Logout";
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { NoQuestion } from "../components/NoQuestion";
 
 type RoomParams = {
@@ -90,10 +91,10 @@ export function AdminRoom() {
   }
 
   useEffect(() => {
-    setTimeout(()=> {
+    setTimeout(() => {
       setLoad(false);
-    },1500)
-  }, [])
+    }, 1500);
+  }, []);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -102,11 +103,13 @@ export function AdminRoom() {
   const filterData = (query: any, questions: any) => {
     if (!query || query === undefined) {
       return questions;
-    } else {         
-      return questions.filter((d: any) => d.content.toLowerCase().includes(query));
+    } else {
+      return questions.filter((d: any) =>
+        d.content.toLowerCase().includes(query)
+      );
     }
   };
-  
+
   const dataFiltered = filterData(searchQuery, questions);
 
   return (
@@ -117,10 +120,16 @@ export function AdminRoom() {
           <div className="container-code-btn">
             <div></div>
             <RoomCode code={params.id} />
-            <Button isOutlined onClick={handleEndRoom} className="btn-logout">
-              <span  className="btn-text">Encerrar sala</span>
-              <LogoutIcon/>
-            </Button>
+            <div className="container-icon-btn">
+              <Link to={`/rooms/${roomId}`} style={{display:'flex', alignItems:'center'}}>
+                <span className="btn-text">Guest</span> 
+                <VisibilityIcon className="svg-eye"/>
+              </Link>
+              <Button isOutlined onClick={handleEndRoom} className="btn-logout">
+                <span className="btn-text">Encerrar sala</span>
+                <LogoutIcon />
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -128,19 +137,21 @@ export function AdminRoom() {
         <div className="room-title">
           <div className="center">
             <h1>Sala {title}</h1>
-            {questions.length > 0 && <span className="center">{questions.length} pergunta(s)</span>}
+            {questions.length > 0 && (
+              <span className="center">{questions.length} pergunta(s)</span>
+            )}
           </div>
           <TextField
-            id="search-bar"           
+            id="search-bar"
             onChange={(e) => {
               setSearchQuery((e.target as HTMLInputElement).value);
-            }}                            
+            }}
             label="Buscar pergunta"
             variant="outlined"
             placeholder="Search..."
-            size="small" 
+            size="small"
             InputProps={{
-              endAdornment: <SearchIcon/>
+              endAdornment: <SearchIcon />,
             }}
           />
         </div>
@@ -156,104 +167,116 @@ export function AdminRoom() {
                 <Tab label="Respondidas" {...a11yProps(1)} />
               </Tabs>
             </Box>
-            {dataFiltered.length > 0 && !load &&  dataFiltered.map((question: any, index: any) => {
-              return (
-                <div key={index}>                  
-                  <TabPanel value={tabValue} index={0}>
-                    {!question.isAnswered && (
-                      <Question
-                        key={question.id}
-                        content={question.content}
-                        author={question.author}
-                        isAnswered={question.isAnswered}
-                        isHighlighted={question.isHighlighted}
-                      >
-                        <>
+            {dataFiltered.length > 0 &&
+              !load &&
+              dataFiltered.map((question: any, index: any) => {
+                return (
+                  <div key={index}>
+                    <TabPanel value={tabValue} index={0}>
+                      {!question.isAnswered && (
+                        <Question
+                          key={question.id}
+                          content={question.content}
+                          author={question.author}
+                          isAnswered={question.isAnswered}
+                          isHighlighted={question.isHighlighted}
+                        >
+                          <>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                handleCheckQuestionAsAnswered(question.id)
+                              }
+                            >
+                              <img
+                                src={checkImg}
+                                alt="Marcar como respondida"
+                                title="Marcar como respondida"
+                              />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                handleHighlightQuestion(question.id)
+                              }
+                            >
+                              <img
+                                src={answerImg}
+                                alt="Destacar pergunta"
+                                title="Destacar pergunta"
+                              />
+                            </button>
+                          </>
                           <button
                             type="button"
-                            onClick={() =>
-                              handleCheckQuestionAsAnswered(question.id)
-                            }
+                            onClick={() => handleDeleteQuestion(question.id)}
                           >
                             <img
-                              src={checkImg}
-                              alt="Marcar como respondida"
-                              title="Marcar como respondida"
+                              src={deleteImg}
+                              alt="Remover pergunta"
+                              title="Remover pergunta"
                             />
                           </button>
+                        </Question>
+                      )}
+
+                      {/* Todas perguntas respondidas */}
+                      {dataFiltered.filter((value: any) => !value.isAnswered)
+                        .length === 0 &&
+                        index === 0 &&
+                        !load && (
+                          <Container className="container-empty">
+                            <p className="msg-empty">
+                              Todas perguntas foram repondidas!{" "}
+                            </p>
+                          </Container>
+                        )}
+                    </TabPanel>
+                    <TabPanel value={tabValue} index={1}>
+                      {question.isAnswered && (
+                        <Question
+                          key={question.id}
+                          content={question.content}
+                          author={question.author}
+                          isAnswered={question.isAnswered}
+                          isHighlighted={question.isHighlighted}
+                        >
                           <button
                             type="button"
-                            onClick={() => handleHighlightQuestion(question.id)}
+                            onClick={() => handleDeleteQuestion(question.id)}
                           >
                             <img
-                              src={answerImg}
-                              alt="Destacar pergunta"
-                              title="Destacar pergunta"
+                              src={deleteImg}
+                              alt="Remover pergunta"
+                              title="Remover pergunta"
                             />
                           </button>
-                        </>
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteQuestion(question.id)}
-                        >
-                          <img
-                            src={deleteImg}
-                            alt="Remover pergunta"
-                            title="Remover pergunta"
-                          />
-                        </button>
-                      </Question>
-                    )}
+                        </Question>
+                      )}
 
-                    {/* Todas perguntas respondidas */}
-                    {dataFiltered.filter((value: any) => !value.isAnswered).length === 0 && index === 0 && !load &&                      
-                      <Container className="container-empty">
-                        <p className="msg-empty">Todas perguntas foram repondidas! </p>
-                      </Container>
-                    }
-                  </TabPanel>
-                  <TabPanel value={tabValue} index={1}>
-                    {question.isAnswered && (
-                      <Question
-                        key={question.id}
-                        content={question.content}
-                        author={question.author}
-                        isAnswered={question.isAnswered}
-                        isHighlighted={question.isHighlighted}
-                      >
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteQuestion(question.id)}
-                        >
-                          <img
-                            src={deleteImg}
-                            alt="Remover pergunta"
-                            title="Remover pergunta"
-                          />
-                        </button>
-                      </Question>
-                    )}
-
-                    {/* Nenhuma pergunta respondida */}
-                    {dataFiltered.filter((value: any) => value.isAnswered).length === 0 && index === 0 && !load &&                      
-                      <Container className="container-empty">
-                        <p className="msg-empty">Nenhum pergunta respondida! </p>
-                      </Container>
-                    }
-                  </TabPanel>
-                </div>
-              );
-            })}
+                      {/* Nenhuma pergunta respondida */}
+                      {dataFiltered.filter((value: any) => value.isAnswered)
+                        .length === 0 &&
+                        index === 0 &&
+                        !load && (
+                          <Container className="container-empty">
+                            <p className="msg-empty">
+                              Nenhum pergunta respondida!
+                            </p>
+                          </Container>
+                        )}
+                    </TabPanel>
+                  </div>
+                );
+              })}
 
             {/* Nenhum resultado encontrado */}
-            {dataFiltered.length === 0 &&  !load &&
-             <NoQuestion/>
-            }
-            {load &&
+            {dataFiltered.length === 0 && !load && <NoQuestion />}
+            {load && (
               <div className="container-shimmer">
                 <Shimmer width={750} height={50} />
               </div>
-            }
+            )}
           </Box>
         </div>
       </main>
