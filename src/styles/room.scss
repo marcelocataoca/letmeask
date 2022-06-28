@@ -18,8 +18,20 @@
         display: flex;
         gap: 16px;        
       }
+      .container-icon-btn{
+        display: flex;
+        align-items: center;
+        .svg-eye{
+          margin: 0 5px;
+          color: #835afd;
+        }
+      }
+
       .btn-logout{
+        display: flex;
+        align-items: center;
         height: 40px;
+        margin-left: 12px;
         padding: 0 15px;   
         border-radius: 20px;       
         background: #FFF;
@@ -39,14 +51,16 @@
         }
         .btn-logout{
           padding: 0 8px;
-          border-radius: 20px;       
-          .btn-text{
-            display: none;
-          }
+          border-radius: 20px;
+          margin-left: 8px;
           svg{
             margin-left: 0;
-          }        
-        }      
+          }  
+        }
+        .btn-text{
+          display: none;
+        }
+           
       }
     }
     .container-code-btn{
