@@ -8,7 +8,7 @@ describe("Button to copy code room", () => {
   it("should be able to find a button copy", () => {
     render(<RoomCode code={'0930'}/>);
     const btnCode = screen.queryByRole('button');
-    const image = screen.getAllByAltText('Go copy code');
+    const image = screen.getByAltText("Go copy code");
 
     expect(btnCode).toBeInTheDocument();
     expect(image).toHaveAttribute('src');
