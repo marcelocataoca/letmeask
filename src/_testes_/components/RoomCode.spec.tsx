@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { RoomCode } from '../../components/RoomCode';
 import '@testing-library/jest-dom';
-import copyImg from "../assets/images/copy.svg";
 
 
 describe("Button to copy code room", () => {
