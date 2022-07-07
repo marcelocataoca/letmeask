@@ -16,6 +16,7 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - [Firebase](https://firebase.google.com/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Material UI](https://mui.com/pt/material-ui/getting-started/installation/)
+- [Testing Library](https://testing-library.com/)
 
 ## 🚀 Como executar
 
